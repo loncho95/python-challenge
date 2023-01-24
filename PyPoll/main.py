@@ -2,8 +2,8 @@ import os # This will allow us to create file paths across operating systems
 import csv # Module for reading CSV files
 
 output_path = os.path.join('Resources','election_data.csv')
-# Report_path = os.path.join('Analysis','myreport.txt')
-# myreport = open(Report_path, 'w')
+Report_path = os.path.join('Analysis','myreport.txt')
+myreport = open(Report_path, 'w')
 
 
 
@@ -16,38 +16,47 @@ with open(output_path) as csvfile:
     csv_header = next(csvreader)
 
     # Variables to use
+    total_votes = 0
+    votes_charles = 0
+    votes_diane = 0
+    votes_raymon = 0
+    winner = ""
 
 
-    for row in csvreader:  
-        total_votes = 0
-        candidate_options = []
-        candidate_votes = {}  
+    for row in csvreader:       
         total_votes = total_votes + 1
-        candidate_name = row[2]
 
-        if candidate_name not in candidate_options: # if the candidate does not match any existing candidate 
-            candidate_options.append(candidate_name) # add it to the list of candidates
-            candidate_votes[candidate_name] = 0 # tracking of the votes 
-        candidate_votes[candidate_name] = candidate_votes[candidate_name] + 1 # add the vote to the candidates count
+        if row[2] == "Charles Casper Stockham":
+            votes_charles = votes_charles + 1
+        elif row[2] == "Diana DeGette":
+            votes_diane = votes_diane + 1
+        else:
+            votes_raymon = votes_raymon + 1
 
-for candidate in candidate_votes:
-    votes  = candidate_votes.get(candidate)
+shares_charles = (votes_charles / total_votes)*100
+shares_diane = (votes_diane / total_votes)*100
+shares_raymon = (votes_raymon / total_votes)*100
 
-print(votes)
+if votes_raymon > votes_diane and votes_charles > votes_charles:
+    Winner = "Raymon Anthony Doane"
+elif votes_charles > votes_diane and votes_charles > votes_raymon:
+    Winner = "Charles Casper Stockham"
+else:
+    Winner = "Diana DeGette"
 
     
-# output = f'''
-# Election Results
-# -------------------------
-# Total Votes: {total_votes:,}
-# -------------------------
-# Charles Casper Stockham: 23.049% (85213)
-# Diana DeGette: 73.812% (272892)
-# Raymon Anthony Doane: 3.139% (11606)
-# -------------------------
-# Winner: Diana DeGette
-# -------------------------
-# '''
-# print(output)
+output = f'''
+Election Results
+-------------------------
+Total Votes: {total_votes:,}
+-------------------------
+Charles Casper Stockham: {shares_charles:,.3f}% ({votes_charles:,})
+Diana DeGette: {shares_diane:,.3f}% ({votes_diane:,})
+Raymon Anthony Doane: {shares_raymon:,.3f}% ({votes_raymon:,})
+-------------------------
+Winner: {(Winner)}
+-------------------------
+'''
+print(output)
 
-print(candidate_options)
+myreport.write(output)
